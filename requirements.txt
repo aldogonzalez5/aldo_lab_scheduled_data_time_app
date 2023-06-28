@@ -1,2 +1,4 @@
 corva-sdk==1.8.1
 pytest==7.1.1
+requests-mock==1.11.0
+requests==2.29

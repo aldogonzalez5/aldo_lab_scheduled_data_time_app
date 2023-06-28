@@ -27,14 +27,26 @@
       "file": "lambda_function",
       "function": "lambda_handler"
     },
-    "timeout": 120,
-    "memory": 128,
-    "environment": {},
+    "timeout": 240,
+    "memory": 640,
+    "environment": {"LOG_LEVEL": "DEBUG" },
     "runtime": "python3.8",
     "app": {
       "scheduler_type": 2,
       "cron_string": "*/5 * * * *"
     }
   },
-  "datasets": {}
+  "datasets": {
+    "xto.aldo-lab-scheduled-data-time-app": {
+      "permissions": [
+        "read",
+        "write"
+      ]
+    },
+    "corva.wits": {
+      "permissions": [
+        "read"
+      ]
+    }
+  }
 }
