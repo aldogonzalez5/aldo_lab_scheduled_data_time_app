@@ -31,8 +31,16 @@ def lambda_handler(event: ScheduledDataTimeEvent, api: Api, cache: Cache):
         },
         sort={'timestamp': 1},
         limit=500,
-        fields="data.rop"
+        fields="data.rop, timestamp"
     )
+    Logger.debug(f"start_time: {start_time}")
+    Logger.debug(f"end_time: {end_time}")
+    Logger.debug(f"asset_id: {asset_id}")
+    Logger.debug(f"default_headers: {api.default_headers}")
+    Logger.debug(f"api_url: {api.api_url}")
+    Logger.debug(f"data_api_url: {api.data_api_url}")
+    Logger.debug(f"api_key: {api.api_key}")
+
 
     record_count = len(records)
 
@@ -57,7 +65,7 @@ def lambda_handler(event: ScheduledDataTimeEvent, api: Api, cache: Cache):
 # 6. This is how to set up a body of a POST request to store the mean rop data and the start_time and end_time of the interval from the event.
     
     output = {
-        "timestamp": event.end_time,
+        "timestamp": records[-1].get("timestamp"),
         "asset_id": asset_id,
         "company_id": company_id,
         "provider": DATASET_PROVIDER,
@@ -84,7 +92,7 @@ def lambda_handler(event: ScheduledDataTimeEvent, api: Api, cache: Cache):
         response.raise_for_status()
 
     # Utililize the Cache functionality to set a key value. The Cache functionality is built on Redis Cache. See the Cache documentation for more information. This example is setting the last timestamp of the output to Cache
-        cache.set(key='last_exported_timestamp', value=records[-1].get("timestamp") or end_time)
+        cache.set(key='last_exported_timestamp', value=records[-1].get("timestamp"))
     except Exception as ex:
         Logger.debug(f"{response.text}")
         Logger.debug(f"error: {str(ex)}")
